@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="瘦到99">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1A1025" id="metaThemeColor">
+<meta name="description" content="深夜想吃东西？来跟食欲大战一场！意志力闯关小游戏">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi5oul5YiwOTnlsLHpnaDkvaDkuoYiLCJzaG9ydF9uYW1lIjoi5oul5YiwOTkiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzFBMTAyNSIsInRoZW1lX2NvbG9yIjoiIzFBMTAyNSJ9">
+<title>瘦到99就靠你了</title>
+<style>
+/* ========== 全局重置与基础 ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root {
+  --pink: #FF6B9D; --pink-light: #FFB8D0; --pink-dark: #E84580;
+  --purple: #A855F7; --purple-light: #D4A5FF; --purple-dark: #7C3AED;
+  --blue: #60A5FA; --blue-light: #93C5FD;
+  --gold: #FBBF24; --gold-light: #FDE68A;
+  --green: #34D399; --green-light: #6EE7B7;
+  --red: #F87171; --red-light: #FCA5A5;
+  --bg-dark: #1A1025; --bg-card: #2D1F3D; --bg-card2: #3D2A54;
+  --text-main: #F5E6FF; --text-sub: #B794D6; --text-dim: #8B6AAE;
+  --phase1-color: #60A5FA; --phase1-bg: rgba(96,165,250,0.15);
+  --phase2-color: #FBBF24; --phase2-bg: rgba(251,191,36,0.15);
+  --phase3-color: #F87171; --phase3-bg: rgba(248,113,113,0.15);
+  --phase4-color: #A855F7; --phase4-bg: rgba(168,85,247,0.15);
+  --phase5-color: #34D399; --phase5-bg: rgba(52,211,153,0.15);
+  --overlay-bg: rgba(10,5,20,0.92); --overlay-bg-heavy: rgba(10,5,20,0.97);
+  --tab-bg: rgba(26,16,37,0.97); --tab-border: rgba(168,85,247,0.15);
+  --star-color: white; --body-gradient: radial-gradient(ellipse at 50% 0%, rgba(168,85,247,0.15) 0%, transparent 60%);
+}
+/* ========== 浅色主题 ========== */
+body.light {
+  --bg-dark: #FFF5F9; --bg-card: #FFFFFF; --bg-card2: #FFF0F5;
+  --text-main: #3D2054; --text-sub: #7C5A9E; --text-dim: #A88EC4;
+  --phase1-color: #3B82F6; --phase1-bg: rgba(59,130,246,0.1);
+  --phase2-color: #D97706; --phase2-bg: rgba(217,119,6,0.1);
+  --phase3-color: #EF4444; --phase3-bg: rgba(239,68,68,0.1);
+  --phase4-color: #7C3AED; --phase4-bg: rgba(124,58,237,0.1);
+  --phase5-color: #059669; --phase5-bg: rgba(5,150,105,0.1);
+  --overlay-bg: rgba(255,245,249,0.95); --overlay-bg-heavy: rgba(255,245,249,0.98);
+  --tab-bg: rgba(255,255,255,0.97); --tab-border: rgba(168,85,247,0.1);
+  --star-color: rgba(168,85,247,0.3); --body-gradient: radial-gradient(ellipse at 50% 0%, rgba(255,107,157,0.08) 0%, transparent 60%);
+}
+body.light .food-card { box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+body.light .food-card.selected { background: rgba(255,107,157,0.08); }
+body.light .will-report-card { box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+body.light .badge-card { box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+body.light .cat-chip.active { background: rgba(168,85,247,0.1); }
+body.light .will-stat { background: rgba(168,85,247,0.04); }
+body.light .encourage-card { background: linear-gradient(135deg, rgba(255,107,157,0.08), rgba(168,85,247,0.08)); border-color: rgba(255,107,157,0.1); }
+body.light .encourage-text { color: var(--pink-dark); }
+body.light .streak-dot.future { background: #F3E8FF; }
+body.light .streak-dot.today { background: #FFF; border-color: var(--gold); }
+body.light .choice-continue { background: #FFF0F5; color: var(--text-sub); border-color: rgba(168,85,247,0.15); }
+body.light .mode-panel, body.light .blindbox-card, body.light .victory-report { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+body.light .battle-curse { background: rgba(0,0,0,0.03); }
+body.light .battle-food-tag { background: rgba(255,107,157,0.08); }
+body.light .report-row { border-bottom-color: rgba(0,0,0,0.05); }
+body.light .phase-bar-bg { background: rgba(0,0,0,0.06); }
+
+/* 主题切换按钮 */
+.theme-toggle { position: fixed; top: 12px; right: 12px; z-index: 150; width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--bg-card); color: var(--text-main); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.3s; }
+.theme-toggle:active { transform: scale(0.9); }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden;
+  background-image: var(--body-gradient); transition: background 0.4s, color 0.4s;
+}
+
+/* ========== 安全区域适配 ========== */
+html { height: -webkit-fill-available; }
+body { min-height: -webkit-fill-available; padding-top: env(safe-area-inset-top); }
+
+/* ========== 页面容器 ========== */
+.page { display: none; flex-direction: column; height: calc(100vh - 56px - env(safe-area-inset-bottom)); animation: fadeIn 0.3s ease; overflow: hidden; }
+.page.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ========== 欢迎页 ========== */
+#page-welcome { justify-content: center; align-items: center; text-align: center; padding: 20px; height: 100vh; }
+.welcome-moon { font-size: 80px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+.welcome-stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.star { position: absolute; background: var(--star-color); border-radius: 50%; animation: twinkle 2s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+.welcome-title { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, var(--pink), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; position: relative; z-index: 1; }
+.welcome-sub { font-size: 15px; color: var(--text-sub); margin-bottom: 40px; line-height: 1.6; position: relative; z-index: 1; }
+.welcome-btn { background: linear-gradient(135deg, var(--pink), var(--purple)); color: white; border: none; padding: 16px 48px; border-radius: 50px; font-size: 18px; font-weight: 700; cursor: pointer; position: relative; z-index: 1; box-shadow: 0 8px 30px rgba(168,85,247,0.4); transition: transform 0.2s, box-shadow 0.2s; }
+.welcome-btn:active { transform: scale(0.95); box-shadow: 0 4px 15px rgba(168,85,247,0.3); }
+.welcome-tip { margin-top: 30px; font-size: 12px; color: var(--text-dim); position: relative; z-index: 1; }
+
+/* ========== 底部 Tab 栏 ========== */
+.tab-bar { position: fixed; bottom: 0; left: 0; right: 0; height: calc(56px + env(safe-area-inset-bottom)); background: var(--tab-bg); backdrop-filter: blur(20px); border-top: 1px solid var(--tab-border); display: none; justify-content: space-around; align-items: flex-start; padding-top: 6px; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+.tab-bar.visible { display: flex; }
+.tab-item { display: flex; flex-direction: column; align-items: center; gap: 1px; cursor: pointer; padding: 5px 28px; border-radius: 12px; transition: all 0.2s; }
+.tab-item.active { background: rgba(168,85,247,0.12); }
+.tab-icon { font-size: 20px; }
+.tab-label { font-size: 10px; color: var(--text-dim); font-weight: 500; }
+.tab-item.active .tab-label { color: var(--purple-light); font-weight: 700; }
+
+/* ========== 想吃页 - 食物选择 ========== */
+#page-food { padding: 0; }
+.food-header { padding: 16px 16px 8px; text-align: center; flex-shrink: 0; }
+.food-header h2 { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+.food-header p { font-size: 12px; color: var(--text-sub); }
+.food-categories { display: flex; gap: 6px; padding: 6px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; flex-shrink: 0; }
+.food-categories::-webkit-scrollbar { display: none; }
+.cat-chip { flex-shrink: 0; padding: 5px 14px; border-radius: 18px; background: var(--bg-card); color: var(--text-sub); font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; transition: all 0.3s; white-space: nowrap; }
+.cat-chip.active { background: rgba(168,85,247,0.2); color: var(--purple-light); border-color: var(--purple); }
+.food-grid-wrap { flex: 1; overflow-y: auto; padding: 10px 12px 10px; -webkit-overflow-scrolling: touch; }
+.food-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.food-card { background: var(--bg-card); border-radius: 12px; padding: 10px 4px 8px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; position: relative; overflow: hidden; }
+.food-card:active { transform: scale(0.93); }
+.food-card.selected { border-color: var(--pink); background: rgba(255,107,157,0.1); }
+.food-card.selected::after { content: '✓'; position: absolute; top: 2px; right: 4px; font-size: 10px; color: var(--pink); font-weight: 900; }
+.food-emoji { font-size: 30px; display: block; margin-bottom: 2px; }
+.food-name { font-size: 11px; font-weight: 600; color: var(--text-main); line-height: 1.2; }
+.food-cal { font-size: 9px; color: var(--text-dim); margin-top: 1px; }
+
+/* 已选统计条 */
+.food-stats-bar { flex-shrink: 0; background: var(--tab-bg); backdrop-filter: blur(15px); padding: 8px 14px; border-top: 1px solid var(--tab-border); display: flex; align-items: center; gap: 10px; }
+.stats-info { flex: 1; }
+.stats-info .cal-num { font-size: 18px; font-weight: 800; color: var(--pink); }
+.stats-info .cal-label { font-size: 10px; color: var(--text-dim); }
+.stats-info .run-equiv { font-size: 10px; color: var(--gold); margin-top: 1px; }
+.start-battle-btn { background: linear-gradient(135deg, var(--pink), var(--purple)); color: white; border: none; padding: 10px 24px; border-radius: 22px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.start-battle-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.start-battle-btn:active:not(:disabled) { transform: scale(0.95); }
+
+/* ========== 模式选择浮层 ========== */
+.mode-overlay { position: fixed; inset: 0; background: var(--overlay-bg); z-index: 200; display: none; justify-content: center; align-items: center; padding: 20px; }
+.mode-overlay.show { display: flex; }
+.mode-panel { background: var(--bg-card); border-radius: 24px; padding: 28px 18px; width: 100%; max-width: 360px; text-align: center; animation: popIn 0.3s ease; }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.mode-panel h3 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.mode-panel .mode-subtitle { font-size: 13px; color: var(--text-sub); margin-bottom: 20px; }
+.mode-cards { display: flex; gap: 12px; }
+.mode-card { flex: 1; padding: 20px 10px; border-radius: 18px; cursor: pointer; transition: all 0.2s; border: 2.5px solid transparent; }
+.mode-card:active { transform: scale(0.95); }
+.mode-card.savage { background: linear-gradient(180deg, rgba(248,113,113,0.15), rgba(239,68,68,0.05)); }
+.mode-card.savage:hover, .mode-card.savage:active { border-color: var(--red); }
+.mode-card.goddess { background: linear-gradient(180deg, rgba(168,85,247,0.15), rgba(236,72,153,0.05)); }
+.mode-card.goddess:hover, .mode-card.goddess:active { border-color: var(--purple); }
+.mode-card .mode-icon { font-size: 48px; margin-bottom: 8px; }
+.mode-card .mode-name { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.mode-card .mode-desc { font-size: 11px; color: var(--text-sub); line-height: 1.5; }
+.mode-cancel { margin-top: 16px; background: none; border: none; color: var(--text-dim); font-size: 13px; cursor: pointer; padding: 8px; }
+
+/* ========== 闯关页 ========== */
+#page-battle { padding: 0; height: 100vh; }
+.battle-top { padding: 12px 16px 8px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.battle-back { font-size: 20px; cursor: pointer; padding: 4px 8px; }
+.battle-phase-label { font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+.battle-level-num { margin-left: auto; font-size: 12px; color: var(--text-sub); font-weight: 600; }
+.phase-progress { padding: 0 16px 8px; flex-shrink: 0; }
+.phase-bar-bg { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; }
+.phase-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+/* 阶段指示器 */
+.phase-indicators { display: flex; gap: 4px; padding: 0 16px 10px; flex-shrink: 0; }
+.phase-dot { flex: 1; height: 3px; border-radius: 2px; opacity: 0.25; transition: opacity 0.3s; }
+.phase-dot.active { opacity: 1; }
+.phase-dot.passed { opacity: 0.6; }
+
+/* 闯关主体 */
+.battle-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 20px 20px; text-align: center; overflow-y: auto; }
+.battle-scene { font-size: 90px; margin-bottom: 12px; animation: float 3s ease-in-out infinite; }
+.battle-curse { font-size: 13px; color: var(--text-dim); margin-bottom: 14px; padding: 6px 16px; background: rgba(255,255,255,0.04); border-radius: 12px; display: inline-block; }
+.battle-food-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--pink-light); background: rgba(255,107,157,0.1); padding: 4px 12px; border-radius: 12px; margin-bottom: 12px; }
+.battle-text { font-size: 24px; font-weight: 900; line-height: 1.5; margin-bottom: 28px; padding: 0 4px; transition: color 0.3s; }
+.battle-choices { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 10px; }
+.choice-btn { padding: 13px 18px; border-radius: 16px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.choice-btn:active { transform: scale(0.96); }
+.choice-give-up { background: linear-gradient(135deg, var(--green), #059669); color: white; box-shadow: 0 4px 20px rgba(52,211,153,0.25); }
+.choice-continue { background: var(--bg-card2); color: var(--text-sub); border: 1.5px solid rgba(255,255,255,0.08); }
+
+/* ========== 盲盒/爆炸卡片 ========== */
+.blindbox-overlay { position: fixed; inset: 0; background: var(--overlay-bg); z-index: 250; display: none; justify-content: center; align-items: center; padding: 20px; }
+.blindbox-overlay.show { display: flex; }
+.blindbox-card { background: var(--bg-card); border-radius: 24px; padding: 28px 20px; width: 100%; max-width: 340px; text-align: center; animation: shakeIn 0.5s ease; border: 2px solid; }
+@keyframes shakeIn { 0% { transform: scale(0) rotate(-15deg); } 50% { transform: scale(1.1) rotate(5deg); } 100% { transform: scale(1) rotate(0); } }
+.blindbox-boom { font-size: 60px; margin-bottom: 10px; }
+.blindbox-title { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
+.blindbox-msg { font-size: 15px; color: var(--text-main); line-height: 1.6; margin-bottom: 6px; }
+.blindbox-badge-preview { font-size: 12px; color: var(--gold); margin-bottom: 14px; background: rgba(251,191,36,0.1); padding: 6px 14px; border-radius: 12px; display: inline-block; }
+.blindbox-close { background: var(--bg-card2); color: var(--text-main); border: none; padding: 10px 28px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* ========== 胜利页 ========== */
+.victory-overlay { position: fixed; inset: 0; background: var(--overlay-bg-heavy); z-index: 300; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 24px; text-align: center; overflow-y: auto; }
+.victory-overlay.show { display: flex; }
+@keyframes confetti { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(20px) rotate(360deg); opacity: 0; } }
+.victory-emoji { font-size: 72px; animation: float 2s ease-in-out infinite; margin-bottom: 12px; }
+.victory-title { font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--gold), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+.victory-sub { font-size: 14px; color: var(--text-sub); line-height: 1.6; margin-bottom: 20px; max-width: 300px; }
+.victory-report { background: var(--bg-card); border-radius: 20px; padding: 18px; width: 100%; max-width: 300px; margin-bottom: 20px; border: 1px solid rgba(168,85,247,0.15); }
+.report-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+.report-row:last-child { border: none; }
+.report-label { color: var(--text-sub); }
+.report-value { font-weight: 700; color: var(--gold); }
+.victory-btn { background: linear-gradient(135deg, var(--purple), var(--pink)); color: white; border: none; padding: 13px 36px; border-radius: 25px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 25px rgba(168,85,247,0.3); }
+.victory-btn:active { transform: scale(0.95); }
+.victory-new-badges { margin-bottom: 16px; }
+.victory-new-badges .new-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,191,36,0.1); padding: 6px 14px; border-radius: 14px; font-size: 13px; color: var(--gold); margin: 4px; }
+
+/* ========== 成就页 ========== */
+#page-achieve { padding: 16px 14px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.achieve-header { text-align: center; margin-bottom: 16px; }
+.achieve-header h2 { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+.achieve-header p { font-size: 12px; color: var(--text-sub); }
+
+.will-report-card { background: linear-gradient(135deg, var(--bg-card), var(--bg-card2)); border-radius: 18px; padding: 16px; margin-bottom: 16px; border: 1px solid rgba(168,85,247,0.15); }
+.will-report-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.will-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.will-stat { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 8px; text-align: center; }
+.will-stat .num { font-size: 26px; font-weight: 900; }
+.will-stat .num.pink { color: var(--pink); }
+.will-stat .num.purple { color: var(--purple); }
+.will-stat .num.gold { color: var(--gold); }
+.will-stat .num.green { color: var(--green); }
+.will-stat .label { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+.encourage-card { background: linear-gradient(135deg, rgba(255,107,157,0.1), rgba(168,85,247,0.1)); border-radius: 16px; padding: 16px; margin-bottom: 16px; text-align: center; border: 1px solid rgba(255,107,157,0.15); }
+.encourage-emoji { font-size: 36px; margin-bottom: 6px; }
+.encourage-text { font-size: 14px; font-weight: 700; line-height: 1.6; color: var(--pink-light); }
+
+.streak-section { margin-bottom: 16px; }
+.streak-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.streak-grid { display: flex; gap: 5px; flex-wrap: wrap; }
+.streak-dot { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+.streak-dot.done { background: linear-gradient(135deg, var(--pink), var(--purple)); color: white; }
+.streak-dot.today { background: var(--bg-card2); color: var(--gold); border: 2px solid var(--gold); }
+.streak-dot.future { background: var(--bg-card); color: var(--text-dim); }
+
+.badge-section { margin-bottom: 20px; }
+.badge-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.badge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.badge-card { background: var(--bg-card); border-radius: 14px; padding: 12px 6px; text-align: center; position: relative; transition: all 0.3s; }
+.badge-card.locked { opacity: 0.3; filter: grayscale(1); }
+.badge-card.earned { border: 1px solid rgba(251,191,36,0.2); }
+.badge-icon { font-size: 32px; margin-bottom: 4px; }
+.badge-name { font-size: 10px; font-weight: 700; color: var(--text-main); }
+.badge-cond { font-size: 8px; color: var(--text-dim); margin-top: 1px; line-height: 1.3; }
+
+/* ========== 动画 ========== */
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+.shake { animation: shake 0.4s ease; }
+@keyframes glow { 0%, 100% { box-shadow: 0 0 5px rgba(255,107,157,0.3); } 50% { box-shadow: 0 0 20px rgba(255,107,157,0.6); } }
+
+/* ========== 滚动条美化 ========== */
+::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+</head>
+<body>
+
+<!-- 主题切换按钮 -->
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+
+<!-- ==================== 欢迎页 ==================== -->
+<div id="page-welcome" class="page active">
+  <div class="welcome-stars" id="stars"></div>
+  <div class="welcome-moon">🌙</div>
+  <h1 class="welcome-title">瘦到99就靠你了</h1>
+  <p class="welcome-sub">深夜嘴馋了？<br>来，跟你的食欲大战一场！</p>
+  <button class="welcome-btn" onclick="enterApp()">深夜想吃东西？点我</button>
+  <p class="welcome-tip">意志力闯关 · 越早放下越是女神</p>
+</div>
+
+<!-- ==================== 想吃页 - 食物选择 ==================== -->
+<div id="page-food" class="page">
+  <div class="food-header">
+    <h2>你现在到底想吃什么？</h2>
+    <p>选出让你口水直流的罪恶美食吧</p>
+  </div>
+  <div class="food-categories" id="foodCats"></div>
+  <div class="food-grid-wrap">
+    <div class="food-grid" id="foodGrid"></div>
+  </div>
+  <div class="food-stats-bar">
+    <div class="stats-info">
+      <div><span class="cal-num" id="totalCal">0</span> <span class="cal-label">千卡罪恶值</span></div>
+      <div class="run-equiv">🏃‍♀️ 相当于跑 <span id="totalRun">0</span> 公里</div>
+    </div>
+    <button class="start-battle-btn" id="startBattleBtn" disabled onclick="showModeSelect()">开始闯关 →</button>
+  </div>
+</div>
+
+<!-- ==================== 模式选择浮层 ==================== -->
+<div class="mode-overlay" id="modeOverlay">
+  <div class="mode-panel">
+    <h3>选择通关模式</h3>
+    <p class="mode-subtitle">意志力游戏，现在开始</p>
+    <div class="mode-cards">
+      <div class="mode-card savage" onclick="startBattle('savage')">
+        <div class="mode-icon">👿</div>
+        <div class="mode-name">毒舌模式</div>
+        <div class="mode-desc">扎心狠话暴击<br>骂醒你的食欲</div>
+      </div>
+      <div class="mode-card goddess" onclick="startBattle('goddess')">
+        <div class="mode-icon">👸</div>
+        <div class="mode-name">女神模式</div>
+        <div class="mode-desc">温柔正向鼓励<br>做最美的自己</div>
+      </div>
+    </div>
+    <button class="mode-cancel" onclick="closeModeSelect()">再想想...</button>
+  </div>
+</div>
+
+<!-- ==================== 闯关页 ==================== -->
+<div id="page-battle" class="page">
+  <div class="battle-top">
+    <div class="battle-back" onclick="confirmExit()">←</div>
+    <span class="battle-phase-label" id="phaseLabel">心理防线期</span>
+    <span class="battle-level-num" id="levelNum">抵抗第 1 波</span>
+  </div>
+  <div class="phase-progress">
+    <div class="phase-bar-bg"><div class="phase-bar-fill" id="phaseBar"></div></div>
+  </div>
+  <div class="phase-indicators" id="phaseIndicators"></div>
+  <div class="battle-body">
+    <div class="battle-scene" id="battleScene">🍕</div>
+    <div class="battle-food-tag" id="battleFoodTag">🍗 你想吃的：炸鸡柳</div>
+    <div class="battle-curse" id="battleCurse">吃了这口的话...</div>
+    <div class="battle-text" id="battleText">你的腰围正在默默记账，每一口都是一笔还不清的"脂肪贷"。</div>
+    <div class="battle-choices">
+      <button class="choice-btn choice-give-up" onclick="giveUpEating()">✨ 我不吃了！做女神</button>
+      <button class="choice-btn choice-continue" onclick="nextLevel()">😤 不行，还是想吃...</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 盲盒弹窗 ==================== -->
+<div class="blindbox-overlay" id="blindboxOverlay">
+  <div class="blindbox-card" id="blindboxCard">
+    <div class="blindbox-boom" id="bbBoom">💥</div>
+    <div class="blindbox-title" id="bbTitle">警告！</div>
+    <div class="blindbox-msg" id="bbMsg">你已经挣扎了这么久，你的身体在哀嚎！</div>
+    <div class="blindbox-badge-preview" id="bbBadge">🏅 现在放弃吃东西，可获得「钢铁意志」徽章</div>
+    <button class="blindbox-close" onclick="closeBlindbox()">我知道了，继续闯关</button>
+  </div>
+</div>
+
+<!-- ==================== 胜利页 ==================== -->
+<div class="victory-overlay" id="victoryOverlay">
+  <div class="victory-emoji" id="victoryEmoji">🎉</div>
+  <div class="victory-title" id="victoryTitle">耶！又坚持住了！</div>
+  <div class="victory-sub" id="victorySub">恭喜女神，你战胜了深夜食欲的诱惑！</div>
+  <div class="victory-new-badges" id="victoryBadges"></div>
+  <div class="victory-report">
+    <div class="report-row"><span class="report-label">抵抗波数</span><span class="report-value" id="rptWaves">3</span></div>
+    <div class="report-row"><span class="report-label">节省热量</span><span class="report-value" id="rptCal">520 千卡</span></div>
+    <div class="report-row"><span class="report-label">少长脂肪</span><span class="report-value" id="rptFat">0.07 斤</span></div>
+    <div class="report-row"><span class="report-label">意志力评级</span><span class="report-value" id="rptGrade">⭐⭐⭐⭐⭐</span></div>
+  </div>
+  <button class="victory-btn" onclick="closeVictory()">回到首页，继续变美 ✨</button>
+</div>
+
+<!-- ==================== 成就页 ==================== -->
+<div id="page-achieve" class="page">
+  <div class="achieve-header">
+    <h2>我的成就</h2>
+    <p>每一次忍住，都是变美的勋章</p>
+  </div>
+  <div class="encourage-card" id="encourageCard">
+    <div class="encourage-emoji">💪</div>
+    <div class="encourage-text">今天又是变美的一天~<br>保持住，你是最棒的！</div>
+  </div>
+  <div class="will-report-card">
+    <h3>📊 意志力报告</h3>
+    <div class="will-stats">
+      <div class="will-stat"><div class="num pink" id="achTotal">0</div><div class="label">累计抵抗次数</div></div>
+      <div class="will-stat"><div class="num purple" id="achStreak">0</div><div class="label">连续打卡天数</div></div>
+      <div class="will-stat"><div class="num gold" id="achCal">0</div><div class="label">累计节省千卡</div></div>
+      <div class="will-stat"><div class="num green" id="achFat">0</div><div class="label">少长脂肪(斤)</div></div>
+    </div>
+  </div>
+  <div class="streak-section">
+    <h3>📅 打卡记录</h3>
+    <div class="streak-grid" id="streakGrid"></div>
+  </div>
+  <div class="badge-section">
+    <h3>🏅 徽章墙</h3>
+    <div class="badge-grid" id="badgeGrid"></div>
+  </div>
+</div>
+
+<!-- ==================== 底部 Tab ==================== -->
+<div class="tab-bar" id="tabBar">
+  <div class="tab-item active" onclick="switchTab('food')" id="tab-food">
+    <span class="tab-icon">🍔</span>
+    <span class="tab-label">想吃</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('achieve')" id="tab-achieve">
+    <span class="tab-icon">🏆</span>
+    <span class="tab-label">成就</span>
+  </div>
+</div>
+
+<script>
+// ==================== 数据定义 ====================
+
+const FOOD_DATA = {
+  '🧋 奶茶甜饮': [
+    {name:'珍珠奶茶',emoji:'🧋',cal:450},{name:'芋泥啵啵',emoji:'🥤',cal:520},{name:'杨枝甘露',emoji:'🥭',cal:380},
+    {name:'烧仙草',emoji:'🍮',cal:350},{name:'芝芝莓莓',emoji:'🍓',cal:420},{name:'多肉葡萄',emoji:'🍇',cal:400},
+    {name:'可可奶茶',emoji:'🍫',cal:480},{name:'抹茶拿铁',emoji:'🍵',cal:360},{name:'红豆奶茶',emoji:'🫘',cal:410},
+    {name:'黑糖鹿丸',emoji:'🟤',cal:500},{name:'椰椰奶冻',emoji:'🥥',cal:390},{name:'桃桃乌龙',emoji:'🍑',cal:320},
+    {name:'芒果冰沙',emoji:'🥭',cal:340},{name:'草莓星冰乐',emoji:'🍓',cal:460},{name:'焦糖玛奇朵',emoji:'☕',cal:380},
+    {name:'蜜桃四季春',emoji:'🍑',cal:300},{name:'柠檬茶',emoji:'🍋',cal:250},{name:'西瓜汁',emoji:'🍉',cal:200},
+    {name:'荔枝冰茶',emoji:'🫧',cal:280},{name:'血糯米奶茶',emoji:'🍚',cal:440},{name:'酸奶紫米露',emoji:'🥛',cal:360},
+    {name:'百香果茶',emoji:'🫐',cal:260},{name:'蜜雪冰城',emoji:'🍦',cal:350},{name:'椰子水',emoji:'🥥',cal:180},
+    {name:'红茶玛奇朵',emoji:'🫖',cal:400},{name:'波霸奶绿',emoji:'🍵',cal:430},{name:'芋圆奶茶',emoji:'🟣',cal:470},
+    {name:'鲜榨橙汁',emoji:'🍊',cal:220},{name:'提拉米苏奶茶',emoji:'🍰',cal:510},{name:'黑森林奶茶',emoji:'🌲',cal:490},
+    {name:'奥利奥奶昔',emoji:'🍪',cal:530},{name:'双皮奶',emoji:'🍮',cal:300},{name:'冰糖雪梨',emoji:'🍐',cal:180},
+    {name:'蜂蜜柚子茶',emoji:'🍯',cal:240},{name:'桂花酒酿',emoji:'🌸',cal:280},{name:'玫瑰奶茶',emoji:'🌹',cal:370},
+    {name:'咸蛋黄奶茶',emoji:'🥚',cal:460},{name:'车厘子奶昔',emoji:'🍒',cal:400},{name:'香芋麻薯',emoji:'🟪',cal:450},
+    {name:'红丝绒拿铁',emoji:'❤️',cal:420},{name:'薄荷巧克力',emoji:'🍃',cal:480},{name:'番石榴汁',emoji:'🟢',cal:200},
+    {name:'火龙果冰沙',emoji:'🐉',cal:260},{name:'菠萝冰茶',emoji:'🍍',cal:290},{name:'牛油果奶昔',emoji:'🥑',cal:380},
+    {name:'草莓酸奶',emoji:'🍓',cal:320},{name:'芒果班戟',emoji:'🥞',cal:400},{name:'绿豆沙冰',emoji:'💚',cal:270},
+    {name:'桑葚气泡水',emoji:'🫧',cal:190},{name:'椰奶西米露',emoji:'🥥',cal:350},
+  ],
+  '🍗 炸物小吃': [
+    {name:'炸鸡柳',emoji:'🍗',cal:380},{name:'炸鸡翅',emoji:'🍗',cal:420},{name:'炸鸡排',emoji:'🍖',cal:500},
+    {name:'薯条',emoji:'🍟',cal:360},{name:'鸡米花',emoji:'🧆',cal:340},{name:'炸鸡腿',emoji:'🍗',cal:480},
+    {name:'炸年糕',emoji:'🟫',cal:300},{name:'炸红薯丸',emoji:'🟠',cal:280},{name:'炸臭豆腐',emoji:'🟨',cal:350},
+    {name:'炸鱿鱼须',emoji:'🦑',cal:320},{name:'炸虾',emoji:'🍤',cal:400},{name:'春卷',emoji:'🥟',cal:260},
+    {name:'炸蘑菇',emoji:'🍄',cal:240},{name:'洋葱圈',emoji:'⭕',cal:310},{name:'炸香蕉',emoji:'🍌',cal:290},
+    {name:'鸡蛋仔',emoji:'🧇',cal:350},{name:'章鱼小丸子',emoji:'🐙',cal:380},{name:'炸土豆饼',emoji:'🥔',cal:320},
+    {name:'脆皮五花肉',emoji:'🥩',cal:550},{name:'炸牛奶',emoji:'🥛',cal:300},{name:'炸汤圆',emoji:'⚪',cal:270},
+    {name:'狼牙土豆',emoji:'🥔',cal:330},{name:'炸藕盒',emoji:'🟤',cal:280},{name:'天妇罗',emoji:'🍤',cal:360},
+    {name:'甜甜圈',emoji:'🍩',cal:350},{name:'吉事果',emoji:'🥖',cal:320},{name:'麻团',emoji:'🟡',cal:300},
+    {name:'炸馒头片',emoji:'🍞',cal:280},{name:'芝士棒',emoji:'🧀',cal:340},{name:'热狗棒',emoji:'🌭',cal:400},
+    {name:'蛋挞',emoji:'🥧',cal:280},{name:'可乐饼',emoji:'🟤',cal:290},{name:'炸豆腐',emoji:'🟫',cal:220},
+    {name:'炸花生米',emoji:'🥜',cal:380},{name:'椒盐排条',emoji:'🥩',cal:420},{name:'炸蚕豆',emoji:'🫘',cal:300},
+    {name:'锅巴',emoji:'🍘',cal:350},{name:'炸丸子',emoji:'🧆',cal:320},{name:'油条',emoji:'🥖',cal:310},
+    {name:'麻花',emoji:'🔀',cal:370},{name:'馓子',emoji:'🟤',cal:340},{name:'炸冰淇淋',emoji:'🍦',cal:450},
+    {name:'芝士年糕',emoji:'🧀',cal:380},{name:'紫薯球',emoji:'🟣',cal:260},{name:'油炸糕',emoji:'🟡',cal:330},
+    {name:'驴打滚',emoji:'🟤',cal:300},{name:'炸酱面酥',emoji:'🍜',cal:350},{name:'咖喱角',emoji:'🔺',cal:310},
+    {name:'炸糖糕',emoji:'🟠',cal:340},{name:'虾饼',emoji:'🦐',cal:300},
+  ],
+  '🔥 烧烤撸串': [
+    {name:'烤羊肉串',emoji:'🍢',cal:200},{name:'烤牛肉串',emoji:'🥩',cal:220},{name:'烤鸡翅',emoji:'🍗',cal:280},
+    {name:'烤五花肉',emoji:'🥓',cal:350},{name:'烤生蚝',emoji:'🦪',cal:150},{name:'烤韭菜',emoji:'🌿',cal:80},
+    {name:'烤茄子',emoji:'🍆',cal:180},{name:'烤玉米',emoji:'🌽',cal:160},{name:'烤金针菇',emoji:'🍄',cal:100},
+    {name:'烤鱼',emoji:'🐟',cal:300},{name:'烤蒜',emoji:'🧄',cal:60},{name:'烤馒头',emoji:'🍞',cal:200},
+    {name:'烤面筋',emoji:'🟤',cal:150},{name:'烤土豆',emoji:'🥔',cal:140},{name:'烤鸡心',emoji:'❤️',cal:180},
+    {name:'烤排骨',emoji:'🍖',cal:400},{name:'烤扇贝',emoji:'🐚',cal:120},{name:'烤秋刀鱼',emoji:'🐟',cal:250},
+    {name:'烤鸡胗',emoji:'🟤',cal:160},{name:'烤豆皮',emoji:'🟨',cal:130},{name:'烤鸡爪',emoji:'🐔',cal:200},
+    {name:'烤猪蹄',emoji:'🐷',cal:380},{name:'烤腰子',emoji:'🫘',cal:220},{name:'烤脆骨',emoji:'🦴',cal:190},
+    {name:'烤大虾',emoji:'🦐',cal:170},{name:'锡纸花甲',emoji:'🐚',cal:130},{name:'烤肥牛',emoji:'🥩',cal:320},
+    {name:'烤羊排',emoji:'🍖',cal:400},{name:'烤猪颈肉',emoji:'🥩',cal:280},{name:'烤鸡皮',emoji:'🐔',cal:250},
+    {name:'烤培根卷',emoji:'🥓',cal:300},{name:'烤香菇',emoji:'🍄',cal:70},{name:'烤辣椒',emoji:'🌶️',cal:50},
+    {name:'烤蜜薯',emoji:'🍠',cal:180},{name:'烤年糕',emoji:'🟫',cal:200},{name:'烤豆腐',emoji:'🟨',cal:120},
+    {name:'烤牛舌',emoji:'👅',cal:240},{name:'烤猪肝',emoji:'🟤',cal:200},{name:'烤鸭脖',emoji:'🦆',cal:220},
+    {name:'烤鱿鱼',emoji:'🦑',cal:180},{name:'烤凤爪',emoji:'🐔',cal:210},{name:'烤甜椒',emoji:'🫑',cal:40},
+    {name:'铁板豆腐',emoji:'🟫',cal:200},{name:'烤冷面',emoji:'🍜',cal:350},{name:'烤肉肠',emoji:'🌭',cal:280},
+    {name:'烤牛蛙',emoji:'🐸',cal:200},{name:'烤田螺',emoji:'🐌',cal:120},{name:'烤猪尾巴',emoji:'🐷',cal:250},
+    {name:'烤小龙虾',emoji:'🦞',cal:200},{name:'烤蛏子',emoji:'🐚',cal:100},
+  ],
+  '🍜 夜宵主食': [
+    {name:'麻辣烫',emoji:'🍲',cal:600},{name:'螺蛳粉',emoji:'🍜',cal:500},{name:'酸辣粉',emoji:'🍜',cal:450},
+    {name:'热干面',emoji:'🍝',cal:400},{name:'拌面',emoji:'🍝',cal:380},{name:'炒饭',emoji:'🍚',cal:500},
+    {name:'炒年糕',emoji:'🍡',cal:420},{name:'方便面',emoji:'🍜',cal:480},{name:'拉面',emoji:'🍜',cal:520},
+    {name:'馄饨',emoji:'🥟',cal:350},{name:'水饺',emoji:'🥟',cal:400},{name:'煎饺',emoji:'🥟',cal:450},
+    {name:'小笼包',emoji:'🧃',cal:380},{name:'生煎包',emoji:'🟡',cal:420},{name:'锅贴',emoji:'🥟',cal:400},
+    {name:'砂锅粥',emoji:'🍚',cal:300},{name:'皮蛋瘦肉粥',emoji:'🥣',cal:280},{name:'红烧牛肉面',emoji:'🍜',cal:550},
+    {name:'肥肠粉',emoji:'🍜',cal:480},{name:'米线',emoji:'🍜',cal:400},{name:'刀削面',emoji:'🍝',cal:450},
+    {name:'凉皮',emoji:'🍽️',cal:350},{name:'肉夹馍',emoji:'🫓',cal:480},{name:'手抓饼',emoji:'🫓',cal:420},
+    {name:'葱油饼',emoji:'🫓',cal:380},{name:'鸡蛋灌饼',emoji:'🥚',cal:400},{name:'煎饼果子',emoji:'🫓',cal:450},
+    {name:'烤冷面',emoji:'🍜',cal:350},{name:'炒河粉',emoji:'🍝',cal:420},{name:'担担面',emoji:'🍜',cal:460},
+    {name:'重庆小面',emoji:'🌶️',cal:440},{name:'油泼面',emoji:'🍝',cal:480},{name:'臊子面',emoji:'🍜',cal:430},
+    {name:'阳春面',emoji:'🍜',cal:300},{name:'炸酱面',emoji:'🍜',cal:500},{name:'卤肉饭',emoji:'🍚',cal:550},
+    {name:'黄焖鸡',emoji:'🍗',cal:600},{name:'麻辣香锅',emoji:'🍳',cal:700},{name:'冒菜',emoji:'🥬',cal:500},
+    {name:'关东煮',emoji:'🍢',cal:350},{name:'铁板炒饭',emoji:'🍚',cal:520},{name:'蛋炒饭',emoji:'🥚',cal:450},
+    {name:'扬州炒饭',emoji:'🍚',cal:500},{name:'叉烧饭',emoji:'🍖',cal:550},{name:'猪脚饭',emoji:'🐷',cal:600},
+    {name:'鸭血粉丝汤',emoji:'🦆',cal:380},{name:'排骨藕汤',emoji:'🍖',cal:400},{name:'酸菜鱼',emoji:'🐟',cal:500},
+    {name:'水煮肉片',emoji:'🌶️',cal:650},{name:'宫保鸡丁',emoji:'🍗',cal:480},
+  ],
+  '🍰 甜品蛋糕': [
+    {name:'芝士蛋糕',emoji:'🍰',cal:350},{name:'提拉米苏',emoji:'🍰',cal:400},{name:'马卡龙',emoji:'🟣',cal:180},
+    {name:'泡芙',emoji:'🟡',cal:250},{name:'慕斯蛋糕',emoji:'🎂',cal:320},{name:'巧克力蛋糕',emoji:'🍫',cal:450},
+    {name:'奶油蛋糕',emoji:'🎂',cal:380},{name:'千层蛋糕',emoji:'🍰',cal:420},{name:'舒芙蕾',emoji:'🍮',cal:300},
+    {name:'班戟',emoji:'🥞',cal:280},{name:'可丽饼',emoji:'🥞',cal:350},{name:'华夫饼',emoji:'🧇',cal:360},
+    {name:'红丝绒蛋糕',emoji:'❤️',cal:400},{name:'布朗尼',emoji:'🟤',cal:380},{name:'曲奇饼干',emoji:'🍪',cal:250},
+    {name:'冰淇淋',emoji:'🍦',cal:300},{name:'雪糕',emoji:'🍨',cal:280},{name:'麻薯',emoji:'🟢',cal:200},
+    {name:'铜锣烧',emoji:'🥞',cal:250},{name:'蛋黄酥',emoji:'🟡',cal:300},{name:'月饼',emoji:'🥮',cal:420},
+    {name:'绿豆糕',emoji:'💚',cal:200},{name:'桃酥',emoji:'🟤',cal:280},{name:'杏仁饼',emoji:'🟡',cal:260},
+    {name:'牛轧糖',emoji:'🍬',cal:180},{name:'雪花酥',emoji:'❄️',cal:220},{name:'蔓越莓饼干',emoji:'🔴',cal:240},
+    {name:'瑞士卷',emoji:'🟤',cal:350},{name:'黑森林蛋糕',emoji:'🍒',cal:400},{name:'抹茶蛋糕',emoji:'🍵',cal:340},
+    {name:'奶油泡芙',emoji:'🟡',cal:300},{name:'焦糖布丁',emoji:'🍮',cal:250},{name:'芒果西米露',emoji:'🥭',cal:280},
+    {name:'红豆汤圆',emoji:'🔴',cal:300},{name:'酒酿圆子',emoji:'⚪',cal:260},{name:'豆花',emoji:'🟡',cal:150},
+    {name:'椰汁黑糯米',emoji:'🥥',cal:320},{name:'芋圆甜汤',emoji:'🟣',cal:280},
+    {name:'糖葫芦',emoji:'🔴',cal:220},{name:'桂花糕',emoji:'🌸',cal:200},{name:'龟苓膏',emoji:'🖤',cal:120},
+    {name:'木糠蛋糕',emoji:'🟤',cal:380},{name:'拿破仑',emoji:'🍰',cal:420},{name:'生巧克力',emoji:'🍫',cal:350},
+    {name:'焦糖饼干',emoji:'🍪',cal:260},{name:'草莓大福',emoji:'🍓',cal:200},{name:'巴斯克蛋糕',emoji:'🍰',cal:400},
+    {name:'肉松小贝',emoji:'🟡',cal:300},{name:'蜜豆面包',emoji:'🍞',cal:320},
+  ],
+  '🍿 零食薯片': [
+    {name:'薯片',emoji:'🍿',cal:550},{name:'辣条',emoji:'🌶️',cal:400},{name:'鸡爪',emoji:'🐔',cal:300},
+    {name:'鸭脖',emoji:'🦆',cal:280},{name:'猪蹄',emoji:'🐷',cal:350},{name:'牛肉干',emoji:'🥩',cal:320},
+    {name:'鱼豆腐',emoji:'🐟',cal:250},{name:'豆干',emoji:'🟫',cal:200},{name:'海苔',emoji:'🟢',cal:100},
+    {name:'瓜子',emoji:'🌻',cal:300},{name:'花生',emoji:'🥜',cal:350},{name:'开心果',emoji:'🟢',cal:320},
+    {name:'腰果',emoji:'🟡',cal:350},{name:'核桃',emoji:'🧠',cal:380},{name:'话梅',emoji:'🟤',cal:120},
+    {name:'果冻',emoji:'🟣',cal:100},{name:'巧克力',emoji:'🍫',cal:550},{name:'糖果',emoji:'🍬',cal:400},
+    {name:'饼干',emoji:'🍪',cal:450},{name:'威化',emoji:'🟫',cal:480},{name:'蛋卷',emoji:'🟡',cal:420},
+    {name:'奶片',emoji:'⚪',cal:200},{name:'山楂片',emoji:'🔴',cal:180},{name:'果丹皮',emoji:'🟤',cal:200},
+    {name:'棉花糖',emoji:'☁️',cal:300},{name:'跳跳糖',emoji:'💥',cal:150},{name:'口香糖',emoji:'🫧',cal:50},
+    {name:'虾条',emoji:'🦐',cal:450},{name:'旺仔小馒头',emoji:'🟡',cal:380},{name:'蛋黄派',emoji:'🟡',cal:350},
+    {name:'沙琪玛',emoji:'🟤',cal:400},{name:'雪饼',emoji:'⚪',cal:350},
+    {name:'仙贝',emoji:'🍘',cal:320},{name:'锅巴',emoji:'🟤',cal:380},{name:'鱼片',emoji:'🐟',cal:250},
+    {name:'猪肉脯',emoji:'🥓',cal:350},{name:'凤爪',emoji:'🐔',cal:280},{name:'卤蛋',emoji:'🥚',cal:150},
+    {name:'豆腐干',emoji:'🟫',cal:200},{name:'素肉',emoji:'🌱',cal:250},{name:'海带结',emoji:'🟤',cal:80},
+    {name:'魔芋爽',emoji:'🟢',cal:60},{name:'酸角糕',emoji:'🟤',cal:200},{name:'芒果干',emoji:'🟡',cal:350},
+    {name:'葡萄干',emoji:'🟣',cal:300},{name:'红枣',emoji:'🔴',cal:280},{name:'蔓越莓干',emoji:'🔴',cal:320},
+    {name:'椰子片',emoji:'🥥',cal:350},{name:'山核桃',emoji:'🟤',cal:400},
+  ],
+  '🍕 外卖大餐': [
+    {name:'披萨',emoji:'🍕',cal:800},{name:'汉堡',emoji:'🍔',cal:650},{name:'炸鸡全家桶',emoji:'🍗',cal:1200},
+    {name:'寿司拼盘',emoji:'🍣',cal:500},{name:'咖喱饭',emoji:'🍛',cal:550},{name:'盖浇饭',emoji:'🍚',cal:600},
+    {name:'烤肉拌饭',emoji:'🥩',cal:580},{name:'石锅拌饭',emoji:'🍚',cal:500},{name:'日式拉面',emoji:'🍜',cal:600},
+    {name:'三明治',emoji:'🥪',cal:400},{name:'墨西哥卷',emoji:'🌯',cal:500},{name:'意大利面',emoji:'🍝',cal:550},
+    {name:'焗饭',emoji:'🍚',cal:650},{name:'炸猪排饭',emoji:'🍖',cal:700},{name:'鳗鱼饭',emoji:'🐟',cal:600},
+    {name:'铁板烧',emoji:'🥩',cal:650},{name:'韩式炸鸡',emoji:'🍗',cal:800},{name:'烤鸭',emoji:'🦆',cal:750},
+    {name:'小龙虾',emoji:'🦞',cal:600},{name:'火锅',emoji:'🍲',cal:1000},{name:'烤全鱼',emoji:'🐟',cal:550},
+    {name:'红烧肉',emoji:'🥩',cal:700},{name:'糖醋排骨',emoji:'🍖',cal:650},{name:'回锅肉',emoji:'🥓',cal:600},
+    {name:'鱼香肉丝',emoji:'🐟',cal:480},{name:'麻婆豆腐',emoji:'🌶️',cal:350},{name:'干锅花菜',emoji:'🥦',cal:300},
+    {name:'椒盐虾',emoji:'🦐',cal:400},{name:'蒜蓉龙虾',emoji:'🦞',cal:450},{name:'白切鸡',emoji:'🍗',cal:350},
+    {name:'口水鸡',emoji:'🐔',cal:400},{name:'夫妻肺片',emoji:'🥩',cal:380},{name:'毛血旺',emoji:'🌶️',cal:550},
+    {name:'水煮鱼',emoji:'🐟',cal:600},{name:'红烧鱼',emoji:'🐟',cal:450},{name:'清蒸鲈鱼',emoji:'🐟',cal:250},
+    {name:'蒜蓉粉丝虾',emoji:'🦐',cal:350},{name:'盐焗鸡',emoji:'🍗',cal:400},{name:'叫花鸡',emoji:'🐔',cal:500},
+    {name:'东坡肉',emoji:'🥩',cal:700},{name:'梅菜扣肉',emoji:'🥬',cal:650},{name:'红烧猪蹄',emoji:'🐷',cal:600},
+    {name:'铁板鱿鱼',emoji:'🦑',cal:350},{name:'香辣蟹',emoji:'🦀',cal:500},{name:'椒盐皮皮虾',emoji:'🦐',cal:400},
+    {name:'蒜蓉扇贝',emoji:'🐚',cal:200},{name:'葱姜炒蟹',emoji:'🦀',cal:450},{name:'清蒸大闸蟹',emoji:'🦀',cal:180},
+    {name:'剁椒鱼头',emoji:'🐟',cal:400},{name:'酱骨架',emoji:'🦴',cal:500},
+  ],
+};
+
+// 阶段定义（越少波数放弃=意志力越强）
+const PHASES = [
+  { name: '心理防线期', range: [1, 3], color: 'var(--phase1-color)', bg: 'var(--phase1-bg)', emoji: '🛡️', desc: '识破假性饥饿', dotColor: '#60A5FA' },
+  { name: '多巴胺陷阱期', range: [4, 7], color: 'var(--phase2-color)', bg: 'var(--phase2-bg)', emoji: '🧠', desc: '多巴胺在欺骗你', dotColor: '#FBBF24' },
+  { name: '视觉冲击期', range: [8, 12], color: 'var(--phase3-color)', bg: 'var(--phase3-bg)', emoji: '👁️', desc: '直面残酷真相', dotColor: '#F87171' },
+  { name: '自我怀疑期', range: [13, 17], color: 'var(--phase4-color)', bg: 'var(--phase4-bg)', emoji: '😰', desc: '最难熬的时刻', dotColor: '#A855F7' },
+  { name: '黎明前的黑暗', range: [18, 20], color: 'var(--phase5-color)', bg: 'var(--phase5-bg)', emoji: '🌅', desc: '黎明就在前方', dotColor: '#34D399' },
+];
+
+// 毒舌模式文案
+const SAVAGE_LINES = [
+  {scene:'🐷',curse:'吃了这口...',text:'你的肚子正在默默记账，每一口都是一笔还不清的"脂肪贷"。'},
+  {scene:'💀',curse:'这口下去...',text:'别人在研究穿搭，你在研究哪家大码装包邮。'},
+  {scene:'🐘',curse:'咬下去的瞬间...',text:'你体重秤上的数字正在准备开庆功宴。'},
+  {scene:'😱',curse:'吞下去之后...',text:'明早的镜子会替你记住今晚所有的放纵——脸肿得像发面馒头。'},
+  {scene:'🤡',curse:'当你选择吃...',text:'你不是饿，你只是嘴寂寞。可你的裤腰带可不这么想。'},
+  {scene:'💔',curse:'每一口都在说...',text:'那条刚买的裙子正在衣柜里哭泣，因为它知道你穿不上了。'},
+  {scene:'🪞',curse:'照照镜子...',text:'你确定要给你双下巴再加一层吗？它已经够辛苦了。'},
+  {scene:'💸',curse:'算算账...',text:'这些钱花在健身卡上，你现在已经是女神了。可你偏要投资脂肪。'},
+  {scene:'🐌',curse:'吃完之后...',text:'明天的你会像只蜗牛一样沉重地爬起来，后悔今晚的每一口。'},
+  {scene:'🤢',curse:'咀嚼的时候...',text:'那锅油反复炸了几十遍，自由基的狂欢，是你皮肤粗糙的加速器。'},
+  {scene:'📏',curse:'量量腰围...',text:'你的腰围每增加1厘米，寿命就缩短一点。这口值吗？'},
+  {scene:'🏋️',curse:'吃了这顿...',text:'你得在跑步机上跑两个小时才能还清。两个小时啊姐妹！'},
+  {scene:'😤',curse:'当你举起筷子...',text:'你前任正在朋友圈秀新女友的马甲线，你确定要继续吃？'},
+  {scene:'🎪',curse:'选择放纵...',text:'深夜吃东西：你的胃在加班，你的脸在膨胀，只有脂肪在开派对。'},
+  {scene:'🫠',curse:'吃完的你...',text:'别骗自己"就吃一口"。你的"一口"能吞掉一整份全家桶。'},
+  {scene:'👗',curse:'试衣间警告...',text:'夏天快来了，你的肉已经准备好从裙子里溢出来打招呼了。'},
+  {scene:'🐄',curse:'这顿饭的代价...',text:'吃吧，反正明天又是新的一天——一个更胖的你迎接的新一天。'},
+  {scene:'🎯',curse:'想想你的目标...',text:'99斤？按你现在这个吃法，199斤还差不多。'},
+  {scene:'🔥',curse:'脂肪在燃烧？...',text:'不对，是你的意志力在燃烧殆尽。你就这点出息？'},
+  {scene:'👻',curse:'深夜的你...',text:'你以为吃完就完了？不，内疚会像鬼一样缠着你到天亮。'},
+];
+
+// 女神模式文案
+const GODDESS_LINES = [
+  {scene:'👸',curse:'亲爱的...',text:'放下它，你值得更好的。明天醒来，你会感谢现在的自己。'},
+  {scene:'🌟',curse:'你知道吗...',text:'真正的美丽从自律开始。你已经很棒了，再坚持一下就好。'},
+  {scene:'🦋',curse:'想象一下...',text:'明天穿上那条最爱的裙子，自信走过街头的你，多美啊。'},
+  {scene:'💪',curse:'你比你想象的...',text:'更加强大。这点小小的饥饿感，根本不是你的对手。'},
+  {scene:'🌸',curse:'每一次忍住...',text:'都是在为未来的自己存一笔"美丽基金"。你值得被投资。'},
+  {scene:'✨',curse:'闭上眼睛...',text:'想象镜子里线条优美的自己，那种自信的光芒，比任何美食都美味。'},
+  {scene:'🌙',curse:'深夜的诱惑...',text:'只是身体在考验你。喝杯温水，做几个深呼吸，你可以的。'},
+  {scene:'💎',curse:'你是钻石...',text:'不需要用食物来填补什么。你本身就足够闪耀。'},
+  {scene:'🎀',curse:'想想看...',text:'全公司最飒的girl就是你。这点油腻不配进入你高贵的胃。'},
+  {scene:'🌈',curse:'每次say no...',text:'你离目标就更近一步。99斤的你在终点线等你，别让她失望。'},
+  {scene:'🧘',curse:'深呼吸...',text:'食欲只是一阵风，几分钟就会过去。而你的美丽是永恒的。'},
+  {scene:'👑',curse:'女王不会...',text:'在深夜向食欲低头。你是自己人生的女王，掌控一切。'},
+  {scene:'🌺',curse:'爱自己...',text:'不是放纵自己，而是给自己最好的。健康和美丽就是最好的礼物。'},
+  {scene:'💫',curse:'你知道吗...',text:'坚持21天就能养成习惯。你已经走了这么远，别回头。'},
+  {scene:'🎭',curse:'此刻的渴望...',text:'只是大脑的一个小把戏。真正的你，比一份宵夜强大一万倍。'},
+  {scene:'🏖️',curse:'想想海滩...',text:'想想旅行时自信穿上比基尼的自己。那个画面值得你今晚的坚持。'},
+  {scene:'🌻',curse:'你就像向日葵...',text:'永远朝着阳光生长。今晚的坚持，是明天绽放的养分。'},
+  {scene:'💝',curse:'未来的你...',text:'一定会给今晚的你一个大大的拥抱，感谢你没有放弃。'},
+  {scene:'🎵',curse:'听听音乐...',text:'用旋律代替食物填满这个夜晚。灵魂饱了，身体就不会饿。'},
+  {scene:'🌠',curse:'许个愿吧...',text:'今晚不吃东西的你，正在宇宙的见证下变得更好。你值得所有美好。'},
+];
+
+// 盲盒卡片
+const BLINDBOX_CARDS = [
+  {boom:'💥',title:'灵魂暴击！',msg:'你已经挣扎了这么久，你的脂肪正在瑟瑟发抖！',badge:'「钢铁意志」',color:'var(--red)'},
+  {boom:'🎆',title:'意志力爆表！',msg:'能坚持到这里的人只有1%！你就是那个传说！',badge:'「万中无一」',color:'var(--purple)'},
+  {boom:'⚡',title:'警报！警报！',msg:'你的食欲正在发出最后的哀嚎，再坚持一下它就投降了！',badge:'「食欲终结者」',color:'var(--gold)'},
+  {boom:'🌋',title:'火山爆发！',msg:'你的小宇宙正在燃烧脂肪！这股力量不可阻挡！',badge:'「脂肪粉碎机」',color:'var(--pink)'},
+  {boom:'🎇',title:'奇迹时刻！',msg:'每一秒的坚持都是奇迹。你正在创造属于自己的传说！',badge:'「奇迹创造者」',color:'var(--green)'},
+  {boom:'💫',title:'宇宙级认证！',msg:'全宇宙最有意志力的女孩就是你！没有之一！',badge:'「宇宙女神」',color:'var(--purple-light)'},
+  {boom:'🔮',title:'命运的选择！',msg:'放弃吃=变美+变瘦+自信。吃=后悔+长肉+失眠。你选哪个？',badge:'「命运掌控者」',color:'var(--blue)'},
+  {boom:'🎰',title:'幸运盲盒！',msg:'恭喜！你解锁了"不吃宵夜免罪金牌"！永久有效！',badge:'「免罪金牌」',color:'var(--gold)'},
+];
+
+// 徽章定义
+const BADGES = [
+  {icon:'🌟',name:'初次觉醒',cond:'完成第一次闯关',need:'total',val:1},
+  {icon:'⚡',name:'闪电决断',cond:'在第1波就放弃吃',need:'wave1',val:1},
+  {icon:'💪',name:'钢铁意志',cond:'在3波内放弃吃',need:'early',val:1},
+  {icon:'🔥',name:'连续3天',cond:'连续打卡3天',need:'streak',val:3},
+  {icon:'👑',name:'一周女王',cond:'连续打卡7天',need:'streak',val:7},
+  {icon:'💎',name:'半月之星',cond:'连续打卡15天',need:'streak',val:15},
+  {icon:'🏆',name:'月度冠军',cond:'连续打卡30天',need:'streak',val:30},
+  {icon:'🎯',name:'十战十胜',cond:'累计抵抗10次',need:'total',val:10},
+  {icon:'🌸',name:'樱花女神',cond:'节省5000千卡',need:'cal',val:5000},
+  {icon:'🦋',name:'破茧成蝶',cond:'节省10000千卡',need:'cal',val:10000},
+  {icon:'🌈',name:'百战百胜',cond:'累计抵抗100次',need:'total',val:100},
+  {icon:'🐉',name:'屠龙勇士',cond:'挺过15波诱惑',need:'maxwave',val:15},
+];
+
+// ==================== 状态管理 ====================
+let state = {
+  selectedFoods: [],
+  currentMode: null,
+  currentLevel: 1,
+  totalCal: 0,
+  inBattle: false,
+  usedLines: [],
+};
+
+let saveData = JSON.parse(localStorage.getItem('slim99_data') || 'null') || {
+  totalResists: 0,
+  totalCalSaved: 0,
+  streakDays: 0,
+  lastDate: null,
+  badges: [],
+  history: [],
+  maxWave: 0,
+  earlyWins: 0,
+  wave1Wins: 0,
+};
+function save() { localStorage.setItem('slim99_data', JSON.stringify(saveData)); }
+
+// ==================== 欢迎页 ====================
+function createStars() {
+  const c = document.getElementById('stars');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 3 + 1;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;`;
+    c.appendChild(s);
+  }
+}
+createStars();
+
+function enterApp() {
+  document.getElementById('page-welcome').classList.remove('active');
+  document.getElementById('page-food').classList.add('active');
+  document.getElementById('tabBar').classList.add('visible');
+  initFoodPage();
+}
+
+// ==================== Tab 切换 ====================
+function switchTab(tab) {
+  if (state.inBattle) return;
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelectorAll('.page').forEach(p => {
+    if (p.id !== 'page-welcome' && p.id !== 'page-battle') p.classList.remove('active');
+  });
+  if (tab === 'food') {
+    document.getElementById('page-food').classList.add('active');
+  } else if (tab === 'achieve') {
+    document.getElementById('page-achieve').classList.add('active');
+    renderAchievePage();
+  }
+}
+
+// ==================== 食物选择页 ====================
+let currentCat = null;
+
+function initFoodPage() {
+  const cats = Object.keys(FOOD_DATA);
+  if (!currentCat) currentCat = cats[0];
+  const catEl = document.getElementById('foodCats');
+  catEl.innerHTML = cats.map(c =>
+    `<div class="cat-chip${c === currentCat ? ' active' : ''}" onclick="selectCat(this,'${c}')">${c}</div>`
+  ).join('');
+  renderFoodGrid();
+}
+
+function selectCat(el, cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderFoodGrid();
+}
+
+function renderFoodGrid() {
+  const foods = FOOD_DATA[currentCat] || [];
+  const grid = document.getElementById('foodGrid');
+  grid.innerHTML = foods.map(f => {
+    const sel = state.selectedFoods.find(s => s.name === f.name);
+    return `<div class="food-card${sel ? ' selected' : ''}" onclick="toggleFood('${f.name}',${f.cal},'${f.emoji}',this)">
+      <span class="food-emoji">${f.emoji}</span>
+      <div class="food-name">${f.name}</div>
+      <div class="food-cal">${f.cal}卡</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFood(name, cal, emoji, el) {
+  const idx = state.selectedFoods.findIndex(f => f.name === name);
+  if (idx >= 0) {
+    state.selectedFoods.splice(idx, 1);
+    el.classList.remove('selected');
+  } else {
+    state.selectedFoods.push({name, cal, emoji});
+    el.classList.add('selected');
+    el.classList.add('shake');
+    setTimeout(() => el.classList.remove('shake'), 400);
+    if (navigator.vibrate) navigator.vibrate(50);
+  }
+  updateStats();
+}
+
+function updateStats() {
+  state.totalCal = state.selectedFoods.reduce((s, f) => s + f.cal, 0);
+  document.getElementById('totalCal').textContent = state.totalCal;
+  document.getElementById('totalRun').textContent = (state.totalCal / 70).toFixed(1);
+  const btn = document.getElementById('startBattleBtn');
+  btn.disabled = state.selectedFoods.length === 0;
+  btn.textContent = state.selectedFoods.length > 0
+    ? `开始闯关 (${state.selectedFoods.length}项) →`
+    : '开始闯关 →';
+}
+
+// ==================== 模式选择 ====================
+function showModeSelect() {
+  document.getElementById('modeOverlay').classList.add('show');
+}
+function closeModeSelect() {
+  document.getElementById('modeOverlay').classList.remove('show');
+}
+
+// ==================== 闯关逻辑 ====================
+function startBattle(mode) {
+  state.currentMode = mode;
+  state.currentLevel = 1;
+  state.inBattle = true;
+  state.usedLines = [];
+  document.getElementById('modeOverlay').classList.remove('show');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-battle').classList.add('active');
+  document.getElementById('tabBar').classList.remove('visible');
+  renderPhaseIndicators();
+  renderBattleLevel();
+}
+
+function getPhase(level) {
+  for (const p of PHASES) {
+    if (level >= p.range[0] && level <= p.range[1]) return p;
+  }
+  return PHASES[PHASES.length - 1];
+}
+
+function getPhaseIndex(level) {
+  for (let i = 0; i < PHASES.length; i++) {
+    if (level >= PHASES[i].range[0] && level <= PHASES[i].range[1]) return i;
+  }
+  return PHASES.length - 1;
+}
+
+function renderPhaseIndicators() {
+  const el = document.getElementById('phaseIndicators');
+  el.innerHTML = PHASES.map((p, i) =>
+    `<div class="phase-dot" id="phaseDot${i}" style="background:${p.dotColor}"></div>`
+  ).join('');
+}
+
+function updatePhaseIndicators(level) {
+  const currentIdx = getPhaseIndex(level);
+  PHASES.forEach((p, i) => {
+    const dot = document.getElementById('phaseDot' + i);
+    dot.className = 'phase-dot';
+    if (i < currentIdx) dot.classList.add('passed');
+    else if (i === currentIdx) dot.classList.add('active');
+  });
+}
+
+function getRandomLine(level) {
+  const lines = state.currentMode === 'savage' ? SAVAGE_LINES : GODDESS_LINES;
+  // 避免重复
+  const available = lines.filter((_, i) => !state.usedLines.includes(i));
+  if (available.length === 0) { state.usedLines = []; return lines[Math.floor(Math.random() * lines.length)]; }
+  const idx = Math.floor(Math.random() * available.length);
+  const originalIdx = lines.indexOf(available[idx]);
+  state.usedLines.push(originalIdx);
+  return available[idx];
+}
+
+function renderBattleLevel() {
+  const level = state.currentLevel;
+  const phase = getPhase(level);
+  const line = getRandomLine(level);
+  const food = state.selectedFoods[Math.floor(Math.random() * state.selectedFoods.length)];
+
+  // 阶段标签
+  const phaseLabel = document.getElementById('phaseLabel');
+  phaseLabel.textContent = `${phase.emoji} ${phase.name}`;
+  phaseLabel.style.background = phase.bg;
+  phaseLabel.style.color = phase.color;
+
+  // 波数
+  document.getElementById('levelNum').textContent = `抵抗第 ${level} 波`;
+
+  // 进度条
+  const pct = Math.min((level / 20) * 100, 100);
+  const bar = document.getElementById('phaseBar');
+  bar.style.width = pct + '%';
+  bar.style.background = phase.color;
+
+  // 阶段指示器
+  updatePhaseIndicators(level);
+
+  // 内容
+  document.getElementById('battleScene').textContent = line.scene;
+  document.getElementById('battleFoodTag').innerHTML = food ? `${food.emoji} 你想吃的：${food.name} (${food.cal}卡)` : '';
+  document.getElementById('battleCurse').textContent = food ? `吃了${food.name}的后果...` : line.curse;
+  document.getElementById('battleText').textContent = line.text;
+  document.getElementById('battleText').style.color = phase.color;
+
+  // 页面背景渐变
+  document.getElementById('page-battle').style.background = `linear-gradient(180deg, ${phase.bg} 0%, var(--bg-dark) 50%)`;
+
+  // 按钮文案随阶段变化
+  const giveUpBtn = document.querySelector('.choice-give-up');
+  const continueBtn = document.querySelector('.choice-continue');
+  if (level <= 3) {
+    giveUpBtn.textContent = '✨ 我不吃了！做女神';
+    continueBtn.textContent = '😤 不行，还是想吃...';
+  } else if (level <= 7) {
+    giveUpBtn.textContent = '💪 放下！我比食欲更强';
+    continueBtn.textContent = '🥺 可是真的好想吃...';
+  } else if (level <= 12) {
+    giveUpBtn.textContent = '👑 够了！我选择变美';
+    continueBtn.textContent = '😭 我控制不住自己...';
+  } else if (level <= 17) {
+    giveUpBtn.textContent = '🔥 我绝不认输！';
+    continueBtn.textContent = '💀 我已经快崩溃了...';
+  } else {
+    giveUpBtn.textContent = '🌟 黎明就在眼前！我赢了';
+    continueBtn.textContent = '😈 哪怕去世也要吃...';
+  }
+}
+
+function nextLevel() {
+  state.currentLevel++;
+
+  // 盲盒：从第5波开始随机触发，概率递增
+  if (state.currentLevel >= 5) {
+    const prob = Math.min(0.12 + (state.currentLevel - 5) * 0.04, 0.55);
+    if (Math.random() < prob) {
+      showBlindbox();
+      return;
+    }
+  }
+
+  if (state.currentLevel > 20) {
+    giveUpEating();
+    return;
+  }
+
+  renderBattleLevel();
+}
+
+function showBlindbox() {
+  const card = BLINDBOX_CARDS[Math.floor(Math.random() * BLINDBOX_CARDS.length)];
+  document.getElementById('bbBoom').textContent = card.boom;
+  document.getElementById('bbTitle').textContent = card.title;
+  document.getElementById('bbTitle').style.color = card.color;
+  document.getElementById('bbMsg').textContent = card.msg;
+  document.getElementById('bbBadge').textContent = `🏅 现在放弃吃东西，可获得${card.badge}徽章`;
+  document.getElementById('blindboxCard').style.borderColor = card.color;
+  document.getElementById('blindboxOverlay').classList.add('show');
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+}
+
+function closeBlindbox() {
+  document.getElementById('blindboxOverlay').classList.remove('show');
+  if (state.currentLevel > 20) {
+    giveUpEating();
+  } else {
+    renderBattleLevel();
+  }
+}
+
+function confirmExit() {
+  if (confirm('确定要退出闯关吗？你的进度不会保存哦~')) {
+    exitBattle();
+  }
+}
+
+// ==================== 放弃吃东西 = 胜利 ====================
+function giveUpEating() {
+  const wave = state.currentLevel;
+  const cal = state.totalCal;
+  const fat = (cal / 7700).toFixed(2);
+
+  // 评级：波数越少越好
+  let grade, emoji;
+  if (wave <= 1) { grade = '⭐⭐⭐⭐⭐ 闪电女神'; emoji = '⚡'; }
+  else if (wave <= 3) { grade = '⭐⭐⭐⭐⭐ 钢铁意志'; emoji = '🎉'; }
+  else if (wave <= 7) { grade = '⭐⭐⭐⭐ 意志坚定'; emoji = '💪'; }
+  else if (wave <= 12) { grade = '⭐⭐⭐ 勉强合格'; emoji = '😅'; }
+  else if (wave <= 17) { grade = '⭐⭐ 差点翻车'; emoji = '😰'; }
+  else { grade = '⭐ 悬崖勒马'; emoji = '🥵'; }
+
+  // 保存数据
+  const prevBadges = [...saveData.badges];
+  saveData.totalResists++;
+  saveData.totalCalSaved += cal;
+  if (wave <= 3) saveData.earlyWins++;
+  if (wave === 1) saveData.wave1Wins++;
+  if (wave > saveData.maxWave) saveData.maxWave = wave;
+
+  // 打卡
+  const today = new Date().toISOString().slice(0, 10);
+  if (saveData.lastDate !== today) {
+    if (saveData.lastDate) {
+      const last = new Date(saveData.lastDate);
+      const now = new Date(today);
+      const diff = Math.floor((now - last) / 86400000);
+      saveData.streakDays = diff === 1 ? saveData.streakDays + 1 : 1;
+    } else {
+      saveData.streakDays = 1;
+    }
+    saveData.lastDate = today;
+  }
+
+  saveData.history.push({ date: today, wave, cal, fat: parseFloat(fat) });
+  checkBadges();
+  save();
+
+  // 新获得的徽章
+  const newBadges = saveData.badges.filter(b => !prevBadges.includes(b));
+
+  // 胜利标题
+  const titles = [
+    '耶！我又坚持住了！', '恭喜女神，你赢了！', '太棒了！食欲被你打败了！',
+    '今晚的你超级棒！', '意志力满分通关！', '你是最美的战士！',
+  ];
+  const subs = [
+    `恭喜你战胜了深夜食欲！距离99斤又近了~你节省了 ${fat} 斤脂肪！`,
+    `每一次忍住都是给未来的自己最好的礼物。今晚省下了 ${cal} 千卡！`,
+    `你的自律正在悄悄改变你。少长了 ${fat} 斤肉，值得庆祝！`,
+  ];
+
+  document.getElementById('victoryEmoji').textContent = emoji;
+  document.getElementById('victoryTitle').textContent = titles[Math.floor(Math.random() * titles.length)];
+  document.getElementById('victorySub').textContent = subs[Math.floor(Math.random() * subs.length)];
+  document.getElementById('rptWaves').textContent = wave + ' 波';
+  document.getElementById('rptCal').textContent = cal + ' 千卡';
+  document.getElementById('rptFat').textContent = fat + ' 斤';
+  document.getElementById('rptGrade').textContent = grade;
+
+  // 新徽章展示
+  const badgesEl = document.getElementById('victoryBadges');
+  if (newBadges.length > 0) {
+    const badgeInfo = newBadges.map(name => {
+      const b = BADGES.find(x => x.name === name);
+      return b ? `<span class="new-badge">${b.icon} 新徽章：${b.name}</span>` : '';
+    }).join('');
+    badgesEl.innerHTML = badgeInfo;
+  } else {
+    badgesEl.innerHTML = '';
+  }
+
+  document.getElementById('victoryOverlay').classList.add('show');
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+}
+
+function closeVictory() {
+  document.getElementById('victoryOverlay').classList.remove('show');
+  exitBattle();
+}
+
+function exitBattle() {
+  state.inBattle = false;
+  state.selectedFoods = [];
+  state.currentLevel = 1;
+  state.usedLines = [];
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-food').classList.add('active');
+  document.getElementById('tabBar').classList.add('visible');
+  initFoodPage();
+  updateStats();
+}
+
+// ==================== 徽章检查 ====================
+function checkBadges() {
+  BADGES.forEach(b => {
+    if (saveData.badges.includes(b.name)) return;
+    let earned = false;
+    if (b.need === 'total' && saveData.totalResists >= b.val) earned = true;
+    if (b.need === 'streak' && saveData.streakDays >= b.val) earned = true;
+    if (b.need === 'early' && saveData.earlyWins >= b.val) earned = true;
+    if (b.need === 'wave1' && saveData.wave1Wins >= b.val) earned = true;
+    if (b.need === 'cal' && saveData.totalCalSaved >= b.val) earned = true;
+    if (b.need === 'maxwave' && saveData.maxWave >= b.val) earned = true;
+    if (earned) saveData.badges.push(b.name);
+  });
+}
+
+// ==================== 成就页 ====================
+function renderAchievePage() {
+  document.getElementById('achTotal').textContent = saveData.totalResists;
+  document.getElementById('achStreak').textContent = saveData.streakDays;
+  document.getElementById('achCal').textContent = saveData.totalCalSaved;
+  document.getElementById('achFat').textContent = (saveData.totalCalSaved / 7700).toFixed(2);
+
+  // 鼓励语
+  const encourages = [
+    {emoji:'💪',text:'今天又是变美的一天~<br>保持住，你是最棒的！'},
+    {emoji:'👸',text:'恭喜你又坚持了一天！<br>距离女神越来越近~'},
+    {emoji:'🌟',text:'你的自律让你闪闪发光！<br>继续保持这份美丽~'},
+    {emoji:'🎉',text:`累计抵抗${saveData.totalResists}次！<br>你简直太厉害了！`},
+    {emoji:'🦋',text:`已经节省${(saveData.totalCalSaved/7700).toFixed(2)}斤脂肪！<br>蝴蝶正在破茧~`},
+  ];
+  const enc = saveData.totalResists > 0
+    ? encourages[Math.floor(Math.random() * encourages.length)]
+    : {emoji:'🌙', text:'还没开始闯关呢~<br>今晚想吃东西就来挑战吧！'};
+  document.getElementById('encourageCard').innerHTML =
+    `<div class="encourage-emoji">${enc.emoji}</div><div class="encourage-text">${enc.text}</div>`;
+
+  // 打卡日历（最近14天）
+  const grid = document.getElementById('streakGrid');
+  const today = new Date();
+  let dots = '';
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const ds = d.toISOString().slice(0, 10);
+    const day = d.getDate();
+    const done = saveData.history.some(h => h.date === ds);
+    const isToday = i === 0;
+    let cls = 'future';
+    if (done) cls = 'done';
+    else if (isToday) cls = 'today';
+    dots += `<div class="streak-dot ${cls}">${day}</div>`;
+  }
+  grid.innerHTML = dots;
+
+  // 徽章墙
+  const bg = document.getElementById('badgeGrid');
+  bg.innerHTML = BADGES.map(b => {
+    const earned = saveData.badges.includes(b.name);
+    return `<div class="badge-card${earned ? ' earned' : ' locked'}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+      <div class="badge-cond">${b.cond}</div>
+    </div>`;
+  }).join('');
+}
+
+// ==================== 主题切换 ====================
+function getAutoTheme() {
+  const h = new Date().getHours();
+  // 6:00-18:00 白天浅色，18:00-6:00 夜间深色
+  return (h >= 6 && h < 18) ? 'light' : 'dark';
+}
+
+function applyTheme(theme) {
+  const meta = document.getElementById('metaThemeColor');
+  if (theme === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('themeToggle').textContent = '☀️';
+    if (meta) meta.content = '#FFF5F9';
+  } else {
+    document.body.classList.remove('light');
+    document.getElementById('themeToggle').textContent = '🌙';
+    if (meta) meta.content = '#1A1025';
+  }
+  localStorage.setItem('slim99_theme_manual', theme);
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light');
+  applyTheme(isLight ? 'dark' : 'light');
+}
+
+// 初始化主题：优先用手动设置，否则按时间自动
+(function initTheme() {
+  const manual = localStorage.getItem('slim99_theme_manual');
+  // 如果用户手动切换过，在同一时段内保持手动选择
+  // 否则按时间自动切换
+  if (manual) {
+    applyTheme(manual);
+  } else {
+    applyTheme(getAutoTheme());
+  }
+  // 每分钟检查一次时间，自动切换（仅在未手动设置时）
+  setInterval(() => {
+    if (!localStorage.getItem('slim99_theme_manual_lock')) {
+      applyTheme(getAutoTheme());
+    }
+  }, 60000);
+})();
+
+// ==================== 初始化 ====================
+(function checkStreak() {
+  const today = new Date().toISOString().slice(0, 10);
+  if (saveData.lastDate && saveData.lastDate !== today) {
+    const last = new Date(saveData.lastDate);
+    const now = new Date(today);
+    const diff = Math.floor((now - last) / 86400000);
+    if (diff > 1) saveData.streakDays = 0;
+    save();
+  }
+})();
+</script>
+</body>
+</html>
